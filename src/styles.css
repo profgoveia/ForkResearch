@@ -1,0 +1,55 @@
+/* Extra small devices (phones, 600px and down) */
+html {
+  font-size: 18pt;
+  font-family: sans-serif;
+  background-color: white;
+}
+
+.navbar {
+  display: flex;
+  justify-content: center;
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  html {
+    background-color: yellow;
+    font-size: 0.8rem;
+  }
+
+  .navbar {
+    align-items: center;
+    flex-direction: column;
+  }
+
+  ul {
+    margin: 0;
+    display: flex;
+    padding: 0;
+  }
+
+  .navbar li {
+    margin-left: 24px;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  html {
+    background-color: orange;
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  html {
+    background-color: red;
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  html {
+    background-color: darkred;
+  }
+}
