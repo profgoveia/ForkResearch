@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Home from "./Home";
 import NavBar from "./Navbar";
-import { ConfigProvider } from "antd";
+import { ConfigProvider, Spin } from "antd";
 import Cadastro from "./Cadastro";
 import TitleBar from "./TitleBar";
 
@@ -12,7 +12,7 @@ const root = ReactDOM.createRoot(rootElement);
 
 function App() {
   return (
-    <ConfigProvider theme={{ token: { colorPrimary: "orange" } }}>
+    <ConfigProvider theme={{ token: { colorPrimary: "#1677ff" } }}>
       <BrowserRouter>
         <div className="main">
           <TitleBar />
