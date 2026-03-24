@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Layout, List, Card, Input } from "antd";
+import { Layout, List, Card, Input, Button, message } from "antd";
 import config from "./config";
+import { DeleteOutlined } from "@ant-design/icons";
+import { TThread } from "./types";
 
 const { Content } = Layout;
 const { Search } = Input;
 
 export default function Home() {
-  const [threads, setThreads] = useState<any>([]);
+  const [threads, setThreads] = useState<Array<TThread>>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getThreads();
@@ -14,6 +17,7 @@ export default function Home() {
 
   async function getThreads() {
     try {
+      setLoading(true);
       const response = await fetch(`${config.uri}/threads`, {
         headers: {
           apikey: config.apikey,
@@ -26,7 +30,34 @@ export default function Home() {
       setThreads(threads);
     } catch (error) {
       console.error(error);
+      message.error("Ocorreu um erro ao buscar as Threads");
+    } finally {
+      setLoading(false);
     }
+  }
+
+  function onDelete(id: string) {
+    return async function () {
+      try {
+        setLoading(true);
+        const response = await fetch(`${config.uri}/threads?id=eq.${id}`, {
+          method: "DELETE",
+          headers: {
+            apikey: config.apikey,
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Erro ${response.status}`);
+        }
+        await getThreads();
+        message.success("Thread excluída com sucesso");
+      } catch (error) {
+        console.error(error);
+        message.error("Ocorreu um erro ao excluir a Thread");
+      } finally {
+        setLoading(false);
+      }
+    };
   }
 
   return (
@@ -43,18 +74,23 @@ export default function Home() {
           <List
             grid={{ gutter: 16, column: 1 }}
             dataSource={threads}
-            renderItem={(item: any) => (
+            loading={loading}
+            renderItem={(item: TThread) => (
               <List.Item>
-                <Card title={item.title}>
-                  <div>
-                    <span style={{ fontWeight: "bold" }}>Tipo:</span>{" "}
-                    {item.type}
-                  </div>
-                  <div>
-                    <span style={{ fontWeight: "bold" }}>Thread Pai:</span>{" "}
-                    {item.parent_id ? item.parent_id : "Nenhum"}
-                  </div>
-                  <p>{item.abstract}</p>
+                <Card
+                  title={item.title}
+                  extra={
+                    <Button
+                      type="primary"
+                      danger
+                      size="small"
+                      onClick={onDelete(item.id)}
+                    >
+                      <DeleteOutlined />
+                    </Button>
+                  }
+                >
+                  <CardThread {...item} />
                 </Card>
               </List.Item>
             )}
@@ -64,3 +100,18 @@ export default function Home() {
     </Layout>
   );
 }
+
+const CardThread = ({ type, parent_id, abstract }: TThread) => {
+  return (
+    <>
+      <div>
+        <span style={{ fontWeight: "bold" }}>Tipo:</span> {type}
+      </div>
+      <div>
+        <span style={{ fontWeight: "bold" }}>Thread Pai:</span>{" "}
+        {parent_id ? parent_id : "Nenhum"}
+      </div>
+      <p>{abstract}</p>
+    </>
+  );
+};
