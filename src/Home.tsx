@@ -65,7 +65,7 @@ export default function Home() {
       <Layout>
         <Content style={{ margin: 16 }}>
           <Search
-            placeholder="Buscar pesquisas..."
+            placeholder="Buscar produções acadêmicas..."
             allowClear
             enterButton="Buscar"
             size="large"
